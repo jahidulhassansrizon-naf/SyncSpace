@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { io } from "socket.io-client";
 
-const socket = io("http://localhost:5000");
+const socket = io("https://syncspace-ahmd.onrender.com");
 
 const Team = () => {
   const navigate = useNavigate();
@@ -63,11 +63,14 @@ const Team = () => {
   useEffect(() => {
     const fetchTeamMembers = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/users", {
-          headers: {
-            Authorization: `Bearer ${token}`,
+        const res = await fetch(
+          "https://syncspace-ahmd.onrender.com/api/users",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           },
-        });
+        );
         const data = await res.json();
         if (res.ok) {
           setTeamMembers(data);

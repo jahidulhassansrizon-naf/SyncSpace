@@ -36,7 +36,7 @@ const ProjectFiles = ({ project, currentUser, onProjectUpdate }) => {
       formData.append("secretCode", secretCode);
 
       const res = await fetch(
-        `http://localhost:5000/api/projects/${project._id}/upload-file`,
+        `https://syncspace-ahmd.onrender.com/api/projects/${project._id}/upload-file`,
         {
           method: "POST",
           headers: { Authorization: `Bearer ${token}` },
@@ -72,7 +72,7 @@ const ProjectFiles = ({ project, currentUser, onProjectUpdate }) => {
     try {
       setDeleting(true);
       const res = await fetch(
-        `http://localhost:5000/api/projects/${project._id}/delete-file`,
+        `https://syncspace-ahmd.onrender.com/api/projects/${project._id}/delete-file`,
         {
           method: "DELETE",
           headers: { Authorization: `Bearer ${token}` },
@@ -107,7 +107,7 @@ const ProjectFiles = ({ project, currentUser, onProjectUpdate }) => {
       setCodeError("");
 
       const res = await fetch(
-        `http://localhost:5000/api/projects/${project._id}/download?code=${encodeURIComponent(inputCode)}`,
+        `https://syncspace-ahmd.onrender.com/api/projects/${project._id}/download?code=${encodeURIComponent(inputCode)}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         },
@@ -115,7 +115,7 @@ const ProjectFiles = ({ project, currentUser, onProjectUpdate }) => {
 
       const data = await res.json();
       if (res.ok) {
-        const fullUrl = `http://localhost:5000${data.fileUrl}`;
+        const fullUrl = `https://syncspace-ahmd.onrender.com${data.fileUrl}`;
         const response = await fetch(fullUrl);
         const blob = await response.blob();
         const blobUrl = window.URL.createObjectURL(blob);

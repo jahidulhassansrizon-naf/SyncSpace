@@ -58,9 +58,12 @@ const Dashboard = () => {
   const fetchDashboardStats = async () => {
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:5000/api/projects/stats", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await fetch(
+        "https://syncspace-ahmd.onrender.com/api/projects/stats",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
 
       if (res.ok) {
         const data = await res.json();
@@ -110,9 +113,12 @@ const Dashboard = () => {
 
   const fallbackFetchProjects = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/projects", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await fetch(
+        "https://syncspace-ahmd.onrender.com/api/projects",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
       if (res.ok) {
         const projects = await res.json();
         const projectList = Array.isArray(projects) ? projects : [];

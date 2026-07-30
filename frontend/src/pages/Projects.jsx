@@ -6,7 +6,7 @@ import * as THREE from "three";
 import ProjectChat from "./ProjectChat";
 import ProjectFiles from "./ProjectFiles";
 
-const socket = io("http://localhost:5000");
+const socket = io("https://syncspace-ahmd.onrender.com");
 
 const Projects = () => {
   const navigate = useNavigate();
@@ -278,14 +278,17 @@ const Projects = () => {
 
   const loadProjects = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/projects", {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const res = await fetch(
+        "https://syncspace-ahmd.onrender.com/api/projects",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         },
-      });
+      );
       const data = await res.json();
       if (res.ok) {
-        // প্যাগিনেশনের কারণে ডাটা এখন { projects: [...] } আকারে আসছে, তাই এটি হ্যান্ডেল করা হলো[cite: 3]
+        // প্যাগিনেশনের কারণে ডাটা এখন { projects: [...] } আকারে আসছে, তাই এটি হ্যান্ডেল করা হলো
         const projectList = data.projects || data;
         setProjects(projectList);
         projectList.forEach((proj) => {
@@ -399,7 +402,7 @@ const Projects = () => {
 
     try {
       const res = await fetch(
-        `http://localhost:5000/api/projects/${draggableId}/status`,
+        `https://syncspace-ahmd.onrender.com/api/projects/${draggableId}/status`,
         {
           method: "PATCH",
           headers: {
@@ -423,8 +426,8 @@ const Projects = () => {
     e.preventDefault();
     try {
       const url = isEditing
-        ? `http://localhost:5000/api/projects/${editProjectId}`
-        : "http://localhost:5000/api/projects";
+        ? `https://syncspace-ahmd.onrender.com/api/projects/${editProjectId}`
+        : "https://syncspace-ahmd.onrender.com/api/projects";
 
       const method = isEditing ? "PUT" : "POST";
 
@@ -487,7 +490,7 @@ const Projects = () => {
 
     try {
       const res = await fetch(
-        `http://localhost:5000/api/projects/${id}/status`,
+        `https://syncspace-ahmd.onrender.com/api/projects/${id}/status`,
         {
           method: "PATCH",
           headers: {
@@ -510,12 +513,15 @@ const Projects = () => {
     if (!window.confirm("Are you sure you want to delete this project?"))
       return;
     try {
-      const res = await fetch(`http://localhost:5000/api/projects/${id}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const res = await fetch(
+        `https://syncspace-ahmd.onrender.com/api/projects/${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         },
-      });
+      );
 
       const data = await res.json();
 

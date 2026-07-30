@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { io } from "socket.io-client";
 
-const socket = io("http://localhost:5000");
+const socket = io("https://syncspace-ahmd.onrender.com");
 
 const ProjectChat = ({
   projectId,
@@ -43,9 +43,12 @@ const ProjectChat = ({
 
     const fetchProjectDetails = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/projects`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const res = await fetch(
+          `https://syncspace-ahmd.onrender.com/api/projects`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          },
+        );
         const data = await res.json();
         if (res.ok) {
           const currentProj = data.find((p) => p._id === projectId);
@@ -65,7 +68,7 @@ const ProjectChat = ({
     const clearUnreadCount = async () => {
       try {
         await fetch(
-          `http://localhost:5000/api/projects/${projectId}/clear-unread`,
+          `https://syncspace-ahmd.onrender.com/api/projects/${projectId}/clear-unread`,
           {
             method: "PATCH",
             headers: { Authorization: `Bearer ${token}` },
@@ -87,7 +90,7 @@ const ProjectChat = ({
     const fetchMessages = async () => {
       try {
         const res = await fetch(
-          `http://localhost:5000/api/messages/${projectId}`,
+          `https://syncspace-ahmd.onrender.com/api/messages/${projectId}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           },
@@ -113,10 +116,13 @@ const ProjectChat = ({
       if (incomingMsg.project === projectId) {
         setMessages((prev) => [...prev, incomingMsg]);
 
-        fetch(`http://localhost:5000/api/projects/${projectId}/clear-unread`, {
-          method: "PATCH",
-          headers: { Authorization: `Bearer ${token}` },
-        }).catch((err) => console.error(err));
+        fetch(
+          `https://syncspace-ahmd.onrender.com/api/projects/${projectId}/clear-unread`,
+          {
+            method: "PATCH",
+            headers: { Authorization: `Bearer ${token}` },
+          },
+        ).catch((err) => console.error(err));
       }
     };
 
@@ -134,7 +140,7 @@ const ProjectChat = ({
 
   const handleDownload = async (fileUrl, fileName) => {
     try {
-      const fullUrl = `http://localhost:5000${fileUrl}`;
+      const fullUrl = `https://syncspace-ahmd.onrender.com${fileUrl}`;
       const response = await fetch(fullUrl);
       const blob = await response.blob();
       const blobUrl = window.URL.createObjectURL(blob);
@@ -148,17 +154,17 @@ const ProjectChat = ({
       window.URL.revokeObjectURL(blobUrl);
     } catch (err) {
       console.error("Download failed:", err);
-      window.open(`http://localhost:5000${fileUrl}`, "_blank");
+      window.open(`https://syncspace-ahmd.onrender.com${fileUrl}`, "_blank");
     }
   };
 
   // 🚀 আনলক নিশ্চিত করার ফাংশন
   const confirmUnlockWorkflow = async () => {
     setShowUnlockConfirm(false);
-    
+
     try {
       const res = await fetch(
-        `http://localhost:5000/api/projects/${projectId}/unlock`,
+        `https://syncspace-ahmd.onrender.com/api/projects/${projectId}/unlock`,
         {
           method: "PATCH",
           headers: { Authorization: `Bearer ${token}` },
@@ -184,7 +190,7 @@ const ProjectChat = ({
     setShowDeleteConfirm(false);
     try {
       const res = await fetch(
-        `http://localhost:5000/api/projects/${projectId}/allow-delete`,
+        `https://syncspace-ahmd.onrender.com/api/projects/${projectId}/allow-delete`,
         {
           method: "DELETE",
           headers: { Authorization: `Bearer ${token}` },
@@ -215,11 +221,14 @@ const ProjectChat = ({
       formData.append("text", newMessage);
       if (selectedFile) formData.append("file", selectedFile);
 
-      const res = await fetch("http://localhost:5000/api/messages", {
-        method: "POST",
-        headers: { Authorization: `Bearer ${token}` },
-        body: formData,
-      });
+      const res = await fetch(
+        "https://syncspace-ahmd.onrender.com/api/messages",
+        {
+          method: "POST",
+          headers: { Authorization: `Bearer ${token}` },
+          body: formData,
+        },
+      );
 
       const savedMessage = await res.json();
 
@@ -229,7 +238,10 @@ const ProjectChat = ({
         setSelectedFile(null);
         if (fileInputRef.current) fileInputRef.current.value = "";
       } else {
-        showToastMessage(savedMessage.message || "Failed to send message.", "error");
+        showToastMessage(
+          savedMessage.message || "Failed to send message.",
+          "error",
+        );
       }
     } catch (err) {
       console.error("Error sending message:", err);
@@ -248,7 +260,9 @@ const ProjectChat = ({
                 : "bg-rose-50 text-rose-800 border-rose-200"
             }`}
           >
-            <span className="text-sm font-bold tracking-tight">{toast.message}</span>
+            <span className="text-sm font-bold tracking-tight">
+              {toast.message}
+            </span>
           </div>
         </div>
       )}
@@ -410,11 +424,11 @@ const ProjectChat = ({
                           msg.fileUrl.match(/\.(jpeg|jpg|gif|png)$/i) ? (
                             <div className="relative group">
                               <img
-                                src={`http://localhost:5000${msg.fileUrl}`}
+                                src={`https://syncspace-ahmd.onrender.com${msg.fileUrl}`}
                                 alt="attachment"
                                 onClick={() =>
                                   setPreviewImage(
-                                    `http://localhost:5000${msg.fileUrl}`,
+                                    `https://syncspace-ahmd.onrender.com${msg.fileUrl}`,
                                   )
                                 }
                                 className="max-w-full h-auto rounded-xl max-h-44 object-cover border border-stone-700/20 cursor-pointer hover:opacity-90 transition-opacity shadow-xs"
@@ -568,7 +582,7 @@ const ProjectChat = ({
                   type="button"
                   onClick={() => {
                     const path = previewImage.replace(
-                      "http://localhost:5000",
+                      "https://syncspace-ahmd.onrender.com",
                       "",
                     );
                     handleDownload(path);
@@ -591,7 +605,9 @@ const ProjectChat = ({
               Unlock Workspace?
             </h3>
             <p className="text-xs text-stone-600 mb-6 leading-relaxed">
-              By confirming, you will grant the freelancer access to start working on this project. Have you finished discussing all the details?
+              By confirming, you will grant the freelancer access to start
+              working on this project. Have you finished discussing all the
+              details?
             </p>
             <div className="flex justify-end gap-3">
               <button
@@ -619,7 +635,8 @@ const ProjectChat = ({
               Approve Deletion?
             </h3>
             <p className="text-xs text-stone-600 mb-6 leading-relaxed">
-              Are you sure you want to approve this project deletion request? This action cannot be undone.
+              Are you sure you want to approve this project deletion request?
+              This action cannot be undone.
             </p>
             <div className="flex justify-end gap-3">
               <button
