@@ -17,10 +17,10 @@ const ProjectChat = ({
   const [errorMessage, setErrorMessage] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
 
-  // 🚀 কাস্টম মডাল ও টোস্ট (Toast) এর জন্য নতুন স্টেটসমূহ
+  // 🚀 কাস্টম মডাল ও টোস্ট (Toast) এর জন্য স্টেটসমূহ
   const [showUnlockConfirm, setShowUnlockConfirm] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [toast, setToast] = useState(null); // { message: "", type: "success" | "error" }
+  const [toast, setToast] = useState(null);
 
   const [projectData, setProjectData] = useState(null);
 
@@ -35,7 +35,7 @@ const ProjectChat = ({
   // 🚀 টোস্ট মেসেজ দেখানোর ফাংশন
   const showToastMessage = (message, type = "success") => {
     setToast({ message, type });
-    setTimeout(() => setToast(null), 3000); // ৩ সেকেন্ড পর অটোমেটিক চলে যাবে
+    setTimeout(() => setToast(null), 3000);
   };
 
   useEffect(() => {
@@ -175,7 +175,7 @@ const ProjectChat = ({
         setProjectData(data.project);
         socket.emit("workflow_unlocked", { projectId });
         if (onWorkflowUnlocked) onWorkflowUnlocked(true);
-        showToastMessage("Project successfully started!", "success"); // 🚀 কাস্টম সাকসেস মেসেজ
+        showToastMessage("Project successfully started!", "success");
       } else {
         showToastMessage(data.message || "Failed to unlock workflow.", "error");
       }
@@ -201,7 +201,7 @@ const ProjectChat = ({
       if (res.ok) {
         socket.emit("project_deleted", projectId);
         showToastMessage("Project deleted successfully.", "success");
-        setTimeout(() => onClose(), 1500); // মেসেজ দেখার পর চ্যাটবক্স বন্ধ হবে
+        setTimeout(() => onClose(), 1500);
       } else {
         showToastMessage(data.message || "Failed to delete project.", "error");
       }
@@ -300,7 +300,6 @@ const ProjectChat = ({
             </div>
           </div>
 
-          {/* Close Button */}
           <button
             onClick={onClose}
             className="p-1.5 text-stone-400 hover:text-stone-800 hover:bg-stone-100/80 rounded-xl transition-all cursor-pointer"
@@ -357,7 +356,7 @@ const ProjectChat = ({
             </div>
             {isFreelancer && (
               <button
-                onClick={() => setShowDeleteConfirm(true)} // 🚀 কাস্টম মডাল খুলবে
+                onClick={() => setShowDeleteConfirm(true)}
                 className="bg-rose-600 hover:bg-rose-700 text-white px-3 py-1 rounded-lg text-[11px] font-bold transition-all shadow-xs cursor-pointer shrink-0"
               >
                 Approve
