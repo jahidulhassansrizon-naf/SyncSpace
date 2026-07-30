@@ -5,7 +5,7 @@ import { io } from "socket.io-client";
 import * as THREE from "three";
 import ProjectChat from "./ProjectChat";
 import ProjectFiles from "./ProjectFiles";
-import Preloader from "./Preloader"; // প্রিলাইডার কম্পোনেন্ট ইম্পোর্ট করা হলো
+import Preloader from "./Preloader";
 
 const socket = io("https://syncspace-ahmd.onrender.com");
 
@@ -301,7 +301,6 @@ const Projects = () => {
     } catch (err) {
       setError("Server error");
     } finally {
-      // ডাটা লোড সম্পন্ন হলে প্রিলাইডার বন্ধ করার জন্য একটু ডিলে দিয়ে ফলস করা হলো
       setTimeout(() => {
         setLoading(false);
       }, 300);
@@ -595,7 +594,6 @@ const Projects = () => {
       className="relative min-h-screen flex flex-col md:flex-row bg-[#f8f7f4] text-stone-800 overflow-hidden"
       style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
     >
-      {/* ডাটা লোড হওয়া পর্যন্ত প্রিলাইডার দেখাবে */}
       {loading && <Preloader onLoadingComplete={() => setLoading(false)} />}
 
       <style>{`
