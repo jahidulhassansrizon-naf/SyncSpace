@@ -278,6 +278,7 @@ const Projects = () => {
   };
 
   const loadProjects = async () => {
+    setLoading(true);
     try {
       const res = await fetch(
         "https://syncspace-ahmd.onrender.com/api/projects",
