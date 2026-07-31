@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import Preloader from "../components/Preloader"; // Preloader কম্পোনেন্ট ইম্পোর্ট করা হলো
+
 
 const Login = () => {
   const navigate = useNavigate();
@@ -82,9 +82,8 @@ const Login = () => {
 
   return (
     <div className="relative min-h-screen flex items-center justify-center bg-[#f4f6f9] px-4 overflow-hidden font-sans">
-      {/* যদি পুরো পেজে লোডিং চলতে থাকে, তবে Preloader দেখাবে */}
       {loading ? (
-        <Preloader />
+      
       ) : (
         <>
           {/* Back to Home Button */}
