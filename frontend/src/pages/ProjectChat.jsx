@@ -51,7 +51,13 @@ const ProjectChat = ({
         );
         const data = await res.json();
         if (res.ok) {
-          const currentProj = data.find((p) => p._id === projectId);
+          // 🚀 FIX: ডেটা যদি অবজেক্ট হয় তবে data.projects নেবে, না হলে সরাসরি ডেটা অ্যারে হিসেবে নেবে
+          const projectsArray = data.projects
+            ? data.projects
+            : Array.isArray(data)
+              ? data
+              : [];
+          const currentProj = projectsArray.find((p) => p._id === projectId);
           if (currentProj) setProjectData(currentProj);
         }
       } catch (err) {
