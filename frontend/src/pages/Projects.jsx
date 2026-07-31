@@ -5,7 +5,6 @@ import { io } from "socket.io-client";
 import * as THREE from "three";
 import ProjectChat from "./ProjectChat";
 import ProjectFiles from "./ProjectFiles";
-import Preloader from "../components/Preloader";
 
 const socket = io("https://syncspace-ahmd.onrender.com");
 
@@ -33,14 +32,6 @@ const Projects = () => {
   const [activeFileProject, setActiveFileProject] = useState(null);
   const token = localStorage.getItem("token");
 
-  // Safety fallback timer for preloader so it never gets stuck
-  useEffect(() => {
-    const safetyTimer = setTimeout(() => {
-      setLoading(false);
-    }, 2500);
-    return () => clearTimeout(safetyTimer);
-  }, []);
-
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
@@ -55,19 +46,19 @@ const Projects = () => {
     }
   }, [navigate]);
 
-  // Joss Level 3D Background Animation (Interactive Neural/Wave Constellation)
+  // Three.js Background Animation Effect
   useEffect(() => {
     const currentCanvas = canvasRef.current;
     if (!currentCanvas) return;
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(
-      60,
+      75,
       window.innerWidth / window.innerHeight,
       0.1,
       1000,
     );
-    camera.position.z = 40;
+    camera.position.z = 50;
 
     const renderer = new THREE.WebGLRenderer({
       canvas: currentCanvas,
@@ -77,51 +68,49 @@ const Projects = () => {
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-    // Create glowing particles / stars constellation
-    const particleCount = 70;
-    const geometry = new THREE.BufferGeometry();
-    const positions = new Float32Array(particleCount * 3);
-    const velocities = [];
+    const geometry = new THREE.IcosahedronGeometry(1.2, 0);
+    const material = new THREE.MeshStandardMaterial({
+      color: 0x0284c7,
+      wireframe: true,
+      transparent: true,
+      opacity: 0.15,
+    });
 
-    for (let i = 0; i < particleCount * 3; i += 3) {
-      positions[i] = (Math.random() - 0.5) * 60;
-      positions[i + 1] = (Math.random() - 0.5) * 50;
-      positions[i + 2] = (Math.random() - 0.5) * 30;
+    const particlesGroup = new THREE.Group();
+    const particleCount = 25;
+    const particlesArray = [];
 
-      velocities.push({
-        x: (Math.random() - 0.5) * 0.03,
-        y: (Math.random() - 0.5) * 0.03,
-        z: (Math.random() - 0.5) * 0.03,
+    for (let i = 0; i < particleCount; i++) {
+      const mesh = new THREE.Mesh(geometry, material);
+      mesh.position.x = (Math.random() - 0.5) * 90;
+      mesh.position.y = (Math.random() - 0.5) * 70;
+      mesh.position.z = (Math.random() - 0.5) * 40;
+
+      const scale = Math.random() * 1.5 + 0.5;
+      mesh.scale.set(scale, scale, scale);
+
+      particlesGroup.add(mesh);
+      particlesArray.push({
+        mesh,
+        rotSpeedX: (Math.random() - 0.5) * 0.02,
+        rotSpeedY: (Math.random() - 0.5) * 0.02,
+        floatSpeed: Math.random() * 0.02 + 0.01,
       });
     }
+    scene.add(particlesGroup);
 
-    geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1);
+    scene.add(ambientLight);
 
-    const material = new THREE.PointsMaterial({
-      color: 0x0f766e,
-      size: 0.8,
-      transparent: true,
-      opacity: 0.6,
-    });
-
-    const particles = new THREE.Points(geometry, material);
-    scene.add(particles);
-
-    // Lines connecting particles for a high-tech look
-    const lineMaterial = new THREE.LineBasicMaterial({
-      color: 0x0d9488,
-      transparent: true,
-      opacity: 0.12,
-    });
-    const lineGeometry = new THREE.BufferGeometry();
-    const lines = new THREE.LineSegments(lineGeometry, lineMaterial);
-    scene.add(lines);
+    const pointLight = new THREE.PointLight(0x059669, 2, 50);
+    pointLight.position.set(10, 20, 20);
+    scene.add(pointLight);
 
     let mouseX = 0;
     let mouseY = 0;
     const handleMouseMove = (event) => {
-      mouseX = (event.clientX / window.innerWidth - 0.5) * 5;
-      mouseY = (event.clientY / window.innerHeight - 0.5) * 5;
+      mouseX = (event.clientX / window.innerWidth - 0.5) * 3;
+      mouseY = (event.clientY / window.innerHeight - 0.5) * 3;
     };
     window.addEventListener("mousemove", handleMouseMove);
 
@@ -136,52 +125,15 @@ const Projects = () => {
     const animate = () => {
       animationFrameId = requestAnimationFrame(animate);
 
-      const posAttr = geometry.attributes.position;
-      const posArray = posAttr.array;
-      const linePositions = [];
+      particlesArray.forEach((item) => {
+        item.mesh.rotation.x += item.rotSpeedX;
+        item.mesh.rotation.y += item.rotSpeedY;
+        item.mesh.position.y +=
+          Math.sin(Date.now() * 0.002 * item.floatSpeed) * 0.03;
+      });
 
-      for (let i = 0; i < particleCount; i++) {
-        let idx = i * 3;
-        posArray[idx] += velocities[i].x;
-        posArray[idx + 1] += velocities[i].y;
-        posArray[idx + 2] += velocities[i].z;
-
-        if (Math.abs(posArray[idx]) > 30) velocities[i].x *= -1;
-        if (Math.abs(posArray[idx + 1]) > 25) velocities[i].y *= -1;
-        if (Math.abs(posArray[idx + 2]) > 15) velocities[i].z *= -1;
-
-        // Connect close particles with lines
-        for (let j = i + 1; j < particleCount; j++) {
-          let jdx = j * 3;
-          let dist = Math.hypot(
-            posArray[idx] - posArray[jdx],
-            posArray[idx + 1] - posArray[jdx + 1],
-            posArray[idx + 2] - posArray[jdx + 2],
-          );
-
-          if (dist < 8) {
-            linePositions.push(
-              posArray[idx],
-              posArray[idx + 1],
-              posArray[idx + 2],
-              posArray[jdx],
-              posArray[jdx + 1],
-              posArray[jdx + 2],
-            );
-          }
-        }
-      }
-
-      posAttr.needsUpdate = true;
-      lineGeometry.setAttribute(
-        "position",
-        new THREE.Float32BufferAttribute(linePositions, 3),
-      );
-
-      particles.rotation.y += (mouseX - particles.rotation.y) * 0.05;
-      particles.rotation.x += (-mouseY - particles.rotation.x) * 0.05;
-      lines.rotation.y = particles.rotation.y;
-      lines.rotation.x = particles.rotation.x;
+      particlesGroup.rotation.y += (mouseX - particlesGroup.rotation.y) * 0.05;
+      particlesGroup.rotation.x += (-mouseY - particlesGroup.rotation.x) * 0.05;
 
       renderer.render(scene, camera);
     };
@@ -195,6 +147,7 @@ const Projects = () => {
     };
   }, []);
 
+  // 3D Card Tilt Event Handlers
   const handleCardMouseMove = (e) => {
     const card = e.currentTarget;
     const rect = card.getBoundingClientRect();
@@ -324,6 +277,7 @@ const Projects = () => {
   };
 
   const loadProjects = async () => {
+    setLoading(true);
     try {
       const res = await fetch(
         "https://syncspace-ahmd.onrender.com/api/projects",
@@ -346,7 +300,9 @@ const Projects = () => {
     } catch (err) {
       setError("Server error");
     } finally {
-      setLoading(false);
+      setTimeout(() => {
+        setLoading(false);
+      }, 300);
     }
   };
 
@@ -632,13 +588,9 @@ const Projects = () => {
     );
   };
 
-  // if (loading) {
-  //   return <Preloader onLoadingComplete={() => setLoading(false)} />;
-  // }
-
   return (
     <div
-      className="relative min-h-screen flex flex-col md:flex-row bg-[#f8f7f4] text-stone-800 overflow-x-hidden"
+      className="relative min-h-screen flex flex-col md:flex-row bg-[#f8f7f4] text-stone-800 overflow-hidden"
       style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
     >
       <style>{`
@@ -649,10 +601,10 @@ const Projects = () => {
         }
       `}</style>
 
-      {/* Interactive 3D Background Canvas Fixed */}
+      {/* Three.js Background Canvas */}
       <canvas
         ref={canvasRef}
-        className="fixed inset-0 pointer-events-none z-[-1] w-full h-full block"
+        className="absolute inset-0 pointer-events-none z-0"
       ></canvas>
 
       <div className="md:hidden flex items-center justify-between bg-white px-6 py-4 border-b border-stone-200/60 sticky top-0 z-30 shadow-sm">
@@ -699,7 +651,7 @@ const Projects = () => {
       )}
 
       <aside
-        className={`fixed md:sticky top-0 min-h-screen w-64 bg-white/90 backdrop-blur-md p-6 flex flex-col justify-between border-r border-stone-200/60 z-50 transition-transform duration-300 ease-in-out shadow-sm ${
+        className={`fixed md:sticky top-0 min-h-screen w-64 bg-white p-6 flex flex-col justify-between border-r border-stone-200/60 z-50 transition-transform duration-300 ease-in-out shadow-sm ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
         }`}
       >
@@ -764,7 +716,7 @@ const Projects = () => {
       </aside>
 
       <main className="flex-1 flex flex-col min-w-0 relative z-20">
-        <header className="h-auto md:h-20 bg-white/80 backdrop-blur-md px-6 md:px-8 py-4 md:py-0 flex flex-col md:flex-row md:items-center justify-between border-b border-stone-200/60 gap-4 shadow-xs">
+        <header className="h-auto md:h-20 bg-white px-6 md:px-8 py-4 md:py-0 flex flex-col md:flex-row md:items-center justify-between border-b border-stone-200/60 gap-4 shadow-xs">
           <div>
             <h2 className="text-2xl font-bold text-stone-900 tracking-tight">
               Project Tasks and Workflow
@@ -783,7 +735,7 @@ const Projects = () => {
         <DragDropContext onDragEnd={handleOnDragEnd}>
           <div className="p-4 sm:p-6 md:p-8 flex-1 grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* 1. TO DO */}
-            <div className="bg-white/60 backdrop-blur-md border border-white/80 p-5 rounded-3xl shadow-xl shadow-stone-900/5 flex flex-col">
+            <div className="bg-white/10 border border-white/40 p-5 rounded-3xl shadow-2xl shadow-stone-900/10 flex flex-col">
               <div className="flex items-center justify-between mb-4 pb-3 border-b border-stone-100">
                 <h3 className="font-bold text-amber-700 tracking-tight">
                   To Do
@@ -831,7 +783,7 @@ const Projects = () => {
                                 transition: "transform 0.1s ease",
                                 transformStyle: "preserve-3d",
                               }}
-                              className={`bg-white/90 backdrop-blur-sm border border-stone-200/80 p-5 rounded-2xl shadow-md relative ${
+                              className={`bg-white border border-stone-200/80 p-5 rounded-2xl shadow-md relative ${
                                 isClient || !workflowUnlocked
                                   ? "cursor-default"
                                   : "cursor-grab"
@@ -949,7 +901,7 @@ const Projects = () => {
             </div>
 
             {/* 2. IN PROGRESS */}
-            <div className="bg-white/60 backdrop-blur-md border border-white/80 p-5 rounded-3xl shadow-xl shadow-stone-900/5 flex flex-col">
+            <div className="bg-white/10 border border-white/40 p-5 rounded-3xl shadow-2xl shadow-stone-900/10 flex flex-col">
               <div className="flex items-center justify-between mb-4 pb-3 border-b border-stone-100">
                 <h3 className="font-bold text-sky-700 tracking-tight">
                   In Progress
@@ -990,7 +942,7 @@ const Projects = () => {
                                 transition: "transform 0.1s ease",
                                 transformStyle: "preserve-3d",
                               }}
-                              className="bg-white/90 backdrop-blur-sm border border-stone-200/80 p-5 rounded-2xl shadow-md relative"
+                              className="bg-white border border-stone-200/80 p-5 rounded-2xl shadow-md relative"
                             >
                               <div className="flex items-center justify-between mb-3 pb-2 border-b border-stone-100">
                                 <div className="flex items-center gap-2">
@@ -1099,7 +1051,7 @@ const Projects = () => {
             </div>
 
             {/* 3. COMPLETED */}
-            <div className="bg-white/60 backdrop-blur-md border border-white/80 p-5 rounded-3xl shadow-xl shadow-stone-900/5 flex flex-col">
+            <div className="bg-white/10 border border-white/40 p-5 rounded-3xl shadow-2xl shadow-stone-900/10 flex flex-col">
               <div className="flex items-center justify-between mb-4 pb-3 border-b border-stone-100">
                 <h3 className="font-bold text-emerald-700 tracking-tight">
                   Completed
@@ -1140,7 +1092,7 @@ const Projects = () => {
                                 transition: "transform 0.1s ease",
                                 transformStyle: "preserve-3d",
                               }}
-                              className="bg-white/90 backdrop-blur-sm border border-stone-200/80 p-5 rounded-2xl shadow-md relative"
+                              className="bg-white border border-stone-200/80 p-5 rounded-2xl shadow-md relative"
                             >
                               <div className="flex items-center justify-between mb-3 pb-2 border-b border-stone-100">
                                 <div className="flex items-center gap-2">
