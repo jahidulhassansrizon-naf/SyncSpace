@@ -33,6 +33,14 @@ const Projects = () => {
   const [activeFileProject, setActiveFileProject] = useState(null);
   const token = localStorage.getItem("token");
 
+  // Safety fallback timer for preloader so it never gets stuck
+  useEffect(() => {
+    const safetyTimer = setTimeout(() => {
+      setLoading(false);
+    }, 2500);
+    return () => clearTimeout(safetyTimer);
+  }, []);
+
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
@@ -316,7 +324,6 @@ const Projects = () => {
   };
 
   const loadProjects = async () => {
-    setLoading(true);
     try {
       const res = await fetch(
         "https://syncspace-ahmd.onrender.com/api/projects",
@@ -339,9 +346,7 @@ const Projects = () => {
     } catch (err) {
       setError("Server error");
     } finally {
-      setTimeout(() => {
-        setLoading(false);
-      }, 300);
+      setLoading(false);
     }
   };
 
@@ -644,7 +649,7 @@ const Projects = () => {
         }
       `}</style>
 
-      {/* Interactive 3D Background Canvas Fixed (Fixed with z-[-1]) */}
+      {/* Interactive 3D Background Canvas Fixed */}
       <canvas
         ref={canvasRef}
         className="fixed inset-0 pointer-events-none z-[-1] w-full h-full block"
