@@ -5,7 +5,7 @@ import { io } from "socket.io-client";
 import * as THREE from "three";
 import ProjectChat from "./ProjectChat";
 import ProjectFiles from "./ProjectFiles";
-
+import Preloader from "../components/Preloader";
 const socket = io("https://syncspace-ahmd.onrender.com");
 
 const Projects = () => {
@@ -588,6 +588,9 @@ const Projects = () => {
     );
   };
 
+  if (loading) {
+    return <Preloader onLoadingComplete={() => setLoading(false)} />;
+  }
   return (
     <div
       className="relative min-h-screen flex flex-col md:flex-row bg-[#f8f7f4] text-stone-800 overflow-hidden"
