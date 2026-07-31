@@ -632,9 +632,9 @@ const Projects = () => {
     );
   };
 
-  if (loading) {
-    return <Preloader onLoadingComplete={() => setLoading(false)} />;
-  }
+  // if (loading) {
+  //   return <Preloader onLoadingComplete={() => setLoading(false)} />;
+  // }
 
   return (
     <div
