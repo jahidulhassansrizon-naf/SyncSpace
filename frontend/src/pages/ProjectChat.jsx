@@ -269,8 +269,8 @@ const ProjectChat = ({
 
       <div className="fixed bottom-5 right-5 sm:right-7 w-[92vw] sm:w-[390px] h-[560px] max-h-[85vh] bg-white/95 backdrop-blur-md rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.15)] z-50 flex flex-col border border-stone-200/90 overflow-hidden font-sans transition-all duration-300">
         {/* Header */}
-        <div className="p-4 px-5 border-b border-stone-100 bg-white/80 backdrop-blur-sm flex items-center justify-between shrink-0 shadow-2xs">
-          <div className="flex items-center gap-3">
+        <div className="p-4 px-5 border-b border-stone-100 bg-white/80 backdrop-blur-sm flex items-center justify-between shrink-0 shadow-2xs gap-2">
+          <div className="flex items-center gap-3 min-w-0">
             <div className="w-9 h-9 rounded-2xl bg-gradient-to-tr from-stone-900 to-stone-700 text-white flex items-center justify-center font-bold text-xs shadow-md shrink-0">
               <svg
                 className="w-4 h-4 text-white"
@@ -286,22 +286,22 @@ const ProjectChat = ({
                 />
               </svg>
             </div>
-            <div>
-              <h3 className="font-bold text-stone-900 text-sm leading-snug truncate max-w-[170px] tracking-tight">
+            <div className="min-w-0">
+              <h3 className="font-bold text-stone-900 text-sm leading-snug truncate tracking-tight">
                 {projectTitle || "Project Discussion"}
               </h3>
               <p className="text-[10px] text-stone-500 font-medium flex items-center gap-1.5 mt-0.5 tracking-tight">
-                <span className="relative flex h-2 w-2">
+                <span className="relative flex h-2 w-2 shrink-0">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                 </span>
-                Live Workspace Chat
+                <span className="truncate">Live Workspace Chat</span>
               </p>
             </div>
           </div>
 
-          {/* আপনার মার্ক করা নির্দিষ্ট জায়গায় 'Work Start' বাটন বা স্ট্যাটাস */}
-          <div className="flex items-center gap-2">
+          {/* Start Workflow Button / Status */}
+          <div className="flex items-center gap-2 shrink-0">
             {projectData &&
               (isClient ? (
                 !projectData.workflowUnlocked ? (
@@ -309,26 +309,26 @@ const ProjectChat = ({
                     onClick={() => setShowUnlockConfirm(true)}
                     className="bg-stone-900 hover:bg-stone-800 text-white px-3 py-1.5 rounded-xl text-[11px] font-bold transition-all shadow-xs cursor-pointer shrink-0"
                   >
-                    Work Start করুন
+                    Start Workflow
                   </button>
                 ) : (
-                  <span className="bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-1 rounded-lg text-[10px] font-bold">
+                  <span className="bg-emerald-50 text-emerald-700 border border-emerald-200 px-2.5 py-1 rounded-lg text-[10px] font-bold">
                     Active
                   </span>
                 )
               ) : !projectData.workflowUnlocked ? (
-                <span className="bg-amber-50 text-amber-700 border border-amber-200 px-2 py-1 rounded-lg text-[10px] font-bold">
+                <span className="bg-amber-50 text-amber-700 border border-amber-200 px-2.5 py-1 rounded-lg text-[10px] font-bold">
                   Waiting
                 </span>
               ) : (
-                <span className="bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-1 rounded-lg text-[10px] font-bold">
+                <span className="bg-emerald-50 text-emerald-700 border border-emerald-200 px-2.5 py-1 rounded-lg text-[10px] font-bold">
                   Unlocked
                 </span>
               ))}
 
             <button
               onClick={onClose}
-              className="p-1.5 text-stone-400 hover:text-stone-800 hover:bg-stone-100/80 rounded-xl transition-all cursor-pointer"
+              className="p-1.5 text-stone-400 hover:text-stone-800 hover:bg-stone-100/80 rounded-xl transition-all cursor-pointer shrink-0"
             >
               <svg
                 className="w-4 h-4"
