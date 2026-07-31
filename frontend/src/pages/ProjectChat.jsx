@@ -17,7 +17,7 @@ const ProjectChat = ({
   const [errorMessage, setErrorMessage] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
 
-  // 🚀 কাস্টম মডাল ও টোস্ট (Toast) এর জন্য স্টেটসমূহ
+  // কাস্টম মডাল ও টোস্ট (Toast) এর জন্য স্টেটসমূহ
   const [showUnlockConfirm, setShowUnlockConfirm] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [toast, setToast] = useState(null);
@@ -32,7 +32,7 @@ const ProjectChat = ({
   const isFreelancer = currentUser?.role?.toLowerCase() === "freelancer";
   const isClient = currentUser?.role?.toLowerCase() === "client";
 
-  // 🚀 টোস্ট মেসেজ দেখানোর ফাংশন
+  // টোস্ট মেসেজ দেখানোর ফাংশন
   const showToastMessage = (message, type = "success") => {
     setToast({ message, type });
     setTimeout(() => setToast(null), 3000);
@@ -158,7 +158,7 @@ const ProjectChat = ({
     }
   };
 
-  // 🚀 আনলক নিশ্চিত করার ফাংশন
+  // আনলক নিশ্চিত করার ফাংশন
   const confirmUnlockWorkflow = async () => {
     setShowUnlockConfirm(false);
 
@@ -185,7 +185,7 @@ const ProjectChat = ({
     }
   };
 
-  // 🚀 ডিলিট নিশ্চিত করার ফাংশন
+  // ডিলিট নিশ্চিত করার ফাংশন
   const confirmAllowDelete = async () => {
     setShowDeleteConfirm(false);
     try {
@@ -250,7 +250,7 @@ const ProjectChat = ({
 
   return (
     <>
-      {/* 🚀 Custom Toast Notification */}
+      {/* Custom Toast Notification */}
       {toast && (
         <div className="fixed top-10 left-1/2 -translate-x-1/2 z-[70] animate-in fade-in slide-in-from-top-5 duration-300">
           <div
@@ -300,51 +300,52 @@ const ProjectChat = ({
             </div>
           </div>
 
-          <button
-            onClick={onClose}
-            className="p-1.5 text-stone-400 hover:text-stone-800 hover:bg-stone-100/80 rounded-xl transition-all cursor-pointer"
-          >
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
-        </div>
-
-        {/* Workflow Status Bar */}
-        {projectData && (
-          <div className="bg-stone-50 border-b border-stone-200/60 p-2.5 px-4 flex items-center justify-between gap-2 shrink-0">
-            <div className="text-[11px] font-semibold text-stone-700">
-              {projectData.workflowUnlocked ? (
-                <span className="text-emerald-700 font-bold">
-                  Workflow Status: Unlocked & Active
+          {/* আপনার মার্ক করা নির্দিষ্ট জায়গায় 'Work Start' বাটন বা স্ট্যাটাস */}
+          <div className="flex items-center gap-2">
+            {projectData &&
+              (isClient ? (
+                !projectData.workflowUnlocked ? (
+                  <button
+                    onClick={() => setShowUnlockConfirm(true)}
+                    className="bg-stone-900 hover:bg-stone-800 text-white px-3 py-1.5 rounded-xl text-[11px] font-bold transition-all shadow-xs cursor-pointer shrink-0"
+                  >
+                    Work Start করুন
+                  </button>
+                ) : (
+                  <span className="bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-1 rounded-lg text-[10px] font-bold">
+                    Active
+                  </span>
+                )
+              ) : !projectData.workflowUnlocked ? (
+                <span className="bg-amber-50 text-amber-700 border border-amber-200 px-2 py-1 rounded-lg text-[10px] font-bold">
+                  Waiting
                 </span>
               ) : (
-                <span className="text-amber-700 font-bold">
-                  Workflow Status: Locked
+                <span className="bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-1 rounded-lg text-[10px] font-bold">
+                  Unlocked
                 </span>
-              )}
-            </div>
+              ))}
 
-            {isClient && !projectData.workflowUnlocked && (
-              <button
-                onClick={() => setShowUnlockConfirm(true)}
-                className="bg-stone-900 hover:bg-stone-800 text-white px-3 py-1 rounded-lg text-[11px] font-semibold transition-all shadow-xs cursor-pointer shrink-0"
+            <button
+              onClick={onClose}
+              className="p-1.5 text-stone-400 hover:text-stone-800 hover:bg-stone-100/80 rounded-xl transition-all cursor-pointer"
+            >
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
               >
-                Start Project
-              </button>
-            )}
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
           </div>
-        )}
+        </div>
 
         {/* Delete Request Notification */}
         {projectData?.deleteRequested && (
@@ -596,7 +597,7 @@ const ProjectChat = ({
         )}
       </div>
 
-      {/* 🚀 Custom Unlock Confirmation Modal */}
+      {/* Custom Unlock Confirmation Modal */}
       {showUnlockConfirm && (
         <div className="fixed inset-0 bg-stone-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-[60]">
           <div className="bg-white p-6 rounded-2xl max-w-[320px] w-full shadow-2xl border border-stone-200 animate-in fade-in zoom-in duration-200">
@@ -626,7 +627,7 @@ const ProjectChat = ({
         </div>
       )}
 
-      {/* 🚀 Custom Delete Confirmation Modal */}
+      {/* Custom Delete Confirmation Modal */}
       {showDeleteConfirm && (
         <div className="fixed inset-0 bg-stone-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-[60]">
           <div className="bg-white p-6 rounded-2xl max-w-[320px] w-full shadow-2xl border border-stone-200 animate-in fade-in zoom-in duration-200">
