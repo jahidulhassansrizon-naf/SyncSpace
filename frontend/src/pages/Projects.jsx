@@ -6,6 +6,7 @@ import * as THREE from "three";
 import ProjectChat from "./ProjectChat";
 import ProjectFiles from "./ProjectFiles";
 import Preloader from "../components/Preloader";
+
 const socket = io("https://syncspace-ahmd.onrender.com");
 
 const Projects = () => {
@@ -46,7 +47,7 @@ const Projects = () => {
     }
   }, [navigate]);
 
-  // Three.js Background Animation Effect
+  // Three.js Background Animation Effect (Fixed Canvas)
   useEffect(() => {
     const currentCanvas = canvasRef.current;
     if (!currentCanvas) return;
@@ -591,9 +592,10 @@ const Projects = () => {
   if (loading) {
     return <Preloader onLoadingComplete={() => setLoading(false)} />;
   }
+
   return (
     <div
-      className="relative min-h-screen flex flex-col md:flex-row bg-[#f8f7f4] text-stone-800 overflow-hidden"
+      className="relative min-h-screen flex flex-col md:flex-row bg-[#f8f7f4] text-stone-800 overflow-x-hidden"
       style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
     >
       <style>{`
@@ -604,10 +606,10 @@ const Projects = () => {
         }
       `}</style>
 
-      {/* Three.js Background Canvas */}
+      {/* Three.js Background Canvas Fixed Background */}
       <canvas
         ref={canvasRef}
-        className="absolute inset-0 pointer-events-none z-0"
+        className="fixed inset-0 pointer-events-none z-0 w-full h-full"
       ></canvas>
 
       <div className="md:hidden flex items-center justify-between bg-white px-6 py-4 border-b border-stone-200/60 sticky top-0 z-30 shadow-sm">
