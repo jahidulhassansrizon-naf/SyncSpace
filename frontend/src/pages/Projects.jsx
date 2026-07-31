@@ -644,10 +644,10 @@ const Projects = () => {
         }
       `}</style>
 
-      {/* Interactive 3D Background Canvas Fixed */}
+      {/* Interactive 3D Background Canvas Fixed (Fixed with z-[-1]) */}
       <canvas
         ref={canvasRef}
-        className="fixed inset-0 pointer-events-none z-0 w-full h-full opacity-90"
+        className="fixed inset-0 pointer-events-none z-[-1] w-full h-full block"
       ></canvas>
 
       <div className="md:hidden flex items-center justify-between bg-white px-6 py-4 border-b border-stone-200/60 sticky top-0 z-30 shadow-sm">
