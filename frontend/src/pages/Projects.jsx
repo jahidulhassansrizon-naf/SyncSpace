@@ -5,7 +5,7 @@ import { io } from "socket.io-client";
 import * as THREE from "three";
 import ProjectChat from "./ProjectChat";
 import ProjectFiles from "./ProjectFiles";
-
+import Preloader from "../components/Preloader";
 const socket = io("https://syncspace-ahmd.onrender.com");
 
 const Projects = () => {
@@ -31,6 +31,11 @@ const Projects = () => {
   const [activeChatProject, setActiveChatProject] = useState(null);
   const [activeFileProject, setActiveFileProject] = useState(null);
   const token = localStorage.getItem("token");
+  useEffect(() => {
+    if (loading) {
+      return <Preloader onLoadingComplete={() => setLoading(false)} />;
+    }
+  }, []);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
