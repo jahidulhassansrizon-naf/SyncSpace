@@ -29,7 +29,7 @@ const Projects = () => {
   });
 
   const [activeChatProject, setActiveChatProject] = useState(null);
-  const [activeFileProject, setActiveFileProject] = (type) => useState(null);
+  const [activeFileProject, setActiveFileProject] = useState(null);
   const token = localStorage.getItem("token");
 
   useEffect(() => {
@@ -862,9 +862,10 @@ const Projects = () => {
                                 <div className="flex gap-2 items-center">
                                   {renderMessageButton(project)}
                                   <button
-                                    onClick={() => {}}
-                                    disabled={true}
-                                    className="px-3 py-1.5 bg-stone-100 text-stone-300 rounded-xl font-bold cursor-not-allowed opacity-50 text-xs"
+                                    onClick={() =>
+                                      setActiveFileProject(project)
+                                    }
+                                    className="px-3 py-1.5 bg-stone-100 hover:bg-stone-900 hover:text-white rounded-xl font-bold transition-all cursor-pointer text-xs"
                                   >
                                     📁 Files
                                   </button>
@@ -1016,9 +1017,10 @@ const Projects = () => {
                                 <div className="flex gap-2 items-center">
                                   {renderMessageButton(project)}
                                   <button
-                                    onClick={() => {}}
-                                    disabled={true}
-                                    className="px-3 py-1.5 bg-stone-100 text-stone-300 rounded-xl font-bold cursor-not-allowed opacity-50 text-xs"
+                                    onClick={() =>
+                                      setActiveFileProject(project)
+                                    }
+                                    className="px-3 py-1.5 bg-stone-100 hover:bg-stone-900 hover:text-white rounded-xl font-bold transition-all cursor-pointer text-xs"
                                   >
                                     📁 Files
                                   </button>
