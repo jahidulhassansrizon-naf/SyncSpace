@@ -5,7 +5,6 @@ import { io } from "socket.io-client";
 import * as THREE from "three";
 import ProjectChat from "./ProjectChat";
 import ProjectFiles from "./ProjectFiles";
-import Preloader from "./Preloader";
 
 const socket = io("https://syncspace-ahmd.onrender.com");
 
@@ -30,7 +29,7 @@ const Projects = () => {
   });
 
   const [activeChatProject, setActiveChatProject] = useState(null);
-  const [activeFileProject, setActiveFileProject] = useState(null);
+  const [activeFileProject, setActiveFileProject] = (type) => useState(null);
   const token = localStorage.getItem("token");
 
   useEffect(() => {
@@ -594,8 +593,6 @@ const Projects = () => {
       className="relative min-h-screen flex flex-col md:flex-row bg-[#f8f7f4] text-stone-800 overflow-hidden"
       style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
     >
-      {loading && <Preloader onLoadingComplete={() => setLoading(false)} />}
-
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
